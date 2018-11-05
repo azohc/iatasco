@@ -3,7 +3,7 @@ package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import aima.core.agent.Action; arreglame jaja
+import aima.core.agent.Action; 
 import aima.core.agent.impl.DynamicAction;
 
 public class EstadoAtasco {
