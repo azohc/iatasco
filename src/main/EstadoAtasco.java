@@ -3,7 +3,8 @@ package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import aima.core.agent.Action; 
+
+import aima.core.agent.Action;
 import aima.core.agent.impl.DynamicAction;
 import aima.core.util.datastructure.XYLocation;
 
@@ -28,7 +29,7 @@ public class EstadoAtasco {
 	
 	
 	public EstadoAtasco() {
-		//inicializar _tablero con tamaño predeterminado
+		//inicializar _tablero con tamanio predeterminado
 		cargarTablero(null, 0);
 	}
 	
@@ -186,6 +187,23 @@ public class EstadoAtasco {
 		return new XYLocation(x, y);		
 	}
 	
+	
+	@Override
+	public boolean equals(Object o) {
+
+		if (this == o) 
+			return true;
+		
+		if ((o == null) || (this.getClass() != o.getClass()) || _tam != ((EstadoAtasco) o).getTam()) 
+			return false;
+		
+		for (int i = 0; i < _tam; i++) 
+			for(int j = 0; j < _tam; j++)
+				if(_tablero[i][j] != ((EstadoAtasco) o).getTablero()[i][j])
+					return false;
+		
+		return true;
+	}
 	
 	public char[][] getTablero(){
 		return _tablero;
