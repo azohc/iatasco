@@ -164,7 +164,7 @@ public class EstadoAtasco {
 					return true;
 			}
 		}
-		else {
+		else if(where.equals(patras)){
 			if(esHorizontal) 
 				if(y > 1 && _tablero[x][y-1] == HUECO) 
 					return true;
@@ -217,6 +217,29 @@ public class EstadoAtasco {
 		this._tam = _tam;
 	}
 	
-	
+	public int hashcode()
+	{
+		//Suma las posiciones (10x +20y) de todos los coches 
+		//obtiene un hash distinto para cada estado
+		//TODO CHECK fijo que hay algo mas simple que tambien da unico
+		int hash = 0;
+		char c = 'a';
+		for(int i=0;i<25;i++)
+		{
+			XYLocation pos = getPositionOf(c);
+			hash += 10 * pos.getXCoOrdinate() + 20* pos.getYCoOrdinate();
+			c++;
+		}
+		
+		c = 'A';
+		for(int i=0;i<25;i++)
+		{
+			XYLocation pos = getPositionOf(c);
+			hash += 10 * pos.getXCoOrdinate() + 20* pos.getYCoOrdinate();
+			c++;
+		}
+		
+		return hash;
+	}
 	
 }
