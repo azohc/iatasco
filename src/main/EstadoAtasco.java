@@ -36,7 +36,13 @@ public class EstadoAtasco {
 	private int _tam;
 	
 	private HashMap<String, XYLocation> _cars;
-	private List<Action> _actions;
+	private List<Action> _actions; 	//TODO mirar si esto es tan reconocible como lo siguiente
+
+	public static Action palante = new DynamicAction("PAL");
+	public static Action patras = new DynamicAction("PAT");
+
+
+	
 	//FICHERO PREDETERMINADO
 	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";		//TODO CHECK PATH
 
@@ -48,8 +54,6 @@ public class EstadoAtasco {
 	private static final char META = '@';
 	private static final char HUECO = '.';
 
-	public static Action palante = new DynamicAction("PAL");
-	public static Action patras = new DynamicAction("PAT");
 
 	
 	public EstadoAtasco() {
