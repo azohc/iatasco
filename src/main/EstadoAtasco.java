@@ -3,6 +3,9 @@ package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import aima.core.agent.Action;
 import aima.core.agent.impl.DynamicAction;
@@ -10,11 +13,30 @@ import aima.core.util.datastructure.XYLocation;
 
 public class EstadoAtasco {
 
+//	private class Pair{
+//		private Action a;
+//		private char c;
+//		
+//		public Pair(Action A, char C)
+//		{
+//			a = A;
+//			c = C;
+//		}
+//		
+//		public Action getAction() {
+//			return a;
+//		}
+//		
+//		public char getCar() {
+//			return c;
+//		}
+//	}
+	
 	private char[][] _tablero;
 	private int _tam;
 	
-	
-	
+	private HashMap<String, XYLocation> _cars;
+	private List<Action> _actions;
 	//FICHERO PREDETERMINADO
 	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";		//TODO CHECK PATH
 
@@ -28,7 +50,7 @@ public class EstadoAtasco {
 
 	public static Action palante = new DynamicAction("PAL");
 	public static Action patras = new DynamicAction("PAT");
-	
+
 	
 	public EstadoAtasco() {
 		//inicializar _tablero con tamanio predeterminado
@@ -44,12 +66,16 @@ public class EstadoAtasco {
 			System.arraycopy(e._tablero[i], 0, _tablero[i], 0, e._tam);
 		
 		_tam = e._tam;
+		_cars = new HashMap<String,XYLocation>(e._cars);
 	}
 	
 	
 	public void cargarTablero(String fichero, int nivel) {
 		if (fichero == null)
 			fichero = FICHERO_PREDETERMINADO;
+		
+		_cars = new HashMap<String, XYLocation>();
+		
 	
 		File f = new File(fichero);
 		try {
@@ -68,8 +94,17 @@ public class EstadoAtasco {
 			
 			for(int i = 0; i < _tam; i++) {
 				linea = bf.readLine();
-				for(int j = 0; j < _tam; j++) 
-					_tablero[i][j] = linea.charAt(j);
+				for(int j = 0; j < _tam; j++) {
+					char c = linea.charAt(j);
+					_tablero[i][j] = c;
+					if(c != PARED && c != META && c != HUECO && !_cars.containsKey(c+""))
+					{
+						_cars.put(c+"", new XYLocation(i,j));
+
+						_actions.add(new DynamicAction(c+"PAL"));
+						_actions.add(new DynamicAction(c+"PAT"));						
+					}
+				}
 			}				
 			bf.close();
 		} catch (Exception e) {
@@ -217,6 +252,11 @@ public class EstadoAtasco {
 
 	public int getTam() {
 		return _tam;
+	}
+	
+	public List<Action> getActionList()
+	{
+		return _actions;
 	}
 
 	public void setTam(int _tam) {
