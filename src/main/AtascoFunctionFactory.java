@@ -1,5 +1,6 @@
 package main;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ public class AtascoFunctionFactory {
 	private static ResultFunction _resultFunction = null;
 	private static ActionsFunction _actionsFunction = null;
 	
-
 	
 	public static ActionsFunction getActionsFunction() {
 		if (null == _actionsFunction) {
@@ -29,10 +29,11 @@ public class AtascoFunctionFactory {
 		return _resultFunction;
 	}
 	
+	
+	
 	private static class AtascoResultFunction implements ResultFunction{
 		public Object result(Object s, Action a) {
 			EstadoAtasco estado = (EstadoAtasco) s;
-			List<Action> actionList = estado.getActionList();
 			
 			char car =  a.toString().charAt(0);
 			Action auxAction = new DynamicAction(a.toString().substring(1));
@@ -66,19 +67,26 @@ public class AtascoFunctionFactory {
 			// the result will be the current state.
 			return s;
 		}
-			/*	Necesitamos saber que coches hay ( cuantos y con que char )
-			 *  para poder tener 1 operador que mueva cada uno o moverlos sabiendo
-			 *  los que hay en el tablero.
-			 * 
-			 * */
+			
 	}
 	
 
 	private static class AtascoActionsFunction implements ActionsFunction {
 		@Override
-		public Set<Action> actions(Object arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		public Set<Action> actions(Object e) {
+			EstadoAtasco estado = (EstadoAtasco) e;
+			
+			Set<Action> actions = new LinkedHashSet<Action>();
+			
+			List<Action> l = estado.getActionList();
+			
+			for(Action a : l) {
+				char car =  a.toString().charAt(0);
+				if(estado.canMoveCar(a, car))
+					actions.add(a);				
+			}
+			
+			return actions;
 		}
 	
 		

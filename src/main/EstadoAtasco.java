@@ -57,12 +57,10 @@ public class EstadoAtasco {
 
 	
 	public EstadoAtasco() {
-		//inicializar _tablero con tamanio predeterminado
 		cargarTablero(null, 0);
 	}
 	
 	public EstadoAtasco(EstadoAtasco e) {
-		//_tablero = e._tablero; //TODO CHECK
 		
 		_tablero = new char[e._tam][e._tam];
 		
@@ -131,7 +129,7 @@ public class EstadoAtasco {
 		int i;
 		if(esHorizontal) {
 			i = y + 1;
-			while(_tablero[x][i++] == c)	//TODO check
+			while(_tablero[x][i++] == c)
 						
 			if(i < _tam - 1 && _tablero[x][i] == HUECO) {
 				_tablero[x][i] = c;
@@ -140,7 +138,7 @@ public class EstadoAtasco {
 		}
 		else {
 			i = x + 1;
-			while(_tablero[i++][y] == c)	//TODO check
+			while(_tablero[i++][y] == c)
 			
 			if(i < _tam - 1 && _tablero[i][y] == HUECO) {
 				_tablero[i][y] = c;
@@ -164,7 +162,7 @@ public class EstadoAtasco {
 		int i;
 		if(esHorizontal) {
 			i = y + 1;
-			while(_tablero[x][i++] == c)	//TODO check ? oob
+			while(_tablero[x][i++] == c)	
 						
 			if(y > 1 && _tablero[x][y-1] == HUECO) {
 				_tablero[x][y - 1] = c;
@@ -173,8 +171,8 @@ public class EstadoAtasco {
 		}
 		else {
 			i = x + 1;
-			while(_tablero[i++][y] == c)	//TODO check ? oob
-			
+			while(_tablero[i++][y] == c)	
+				
 			if(x > 1 && _tablero[x-1][y] == HUECO) {
 				_tablero[x - 1][y] = c;
 				_tablero[i - 1][y] = HUECO;
@@ -192,14 +190,14 @@ public class EstadoAtasco {
 		if(where.equals(palante)) {
 			if(esHorizontal) {
 				i = y + 1;
-				while(_tablero[x][i++] == car)	//TODO check
+				while(_tablero[x][i++] == car)	
 							
 				if(i < _tam - 1 && _tablero[x][i] == HUECO) 
 					return true;
 			}
 			else {
 				i = x + 1;
-				while(_tablero[i++][y] == car)	//TODO check
+				while(_tablero[i++][y] == car)
 				
 				if(i < _tam - 1 && _tablero[i][y] == HUECO) 
 					return true;
@@ -270,24 +268,11 @@ public class EstadoAtasco {
 	@Override
 	public int hashCode()
 	{
-		//Suma las posiciones (10x +20y) de todos los coches 
-		//obtiene un hash distinto para cada estado
-		//TODO CHECK fijo que hay algo mas simple que tambien da unico
 		int hash = 0;
-		char c = 'a';
-		for(int i=0;i<25;i++)
-		{
-			XYLocation pos = getPositionOf(c);
-			hash += 10 * pos.getXCoOrdinate() + 20 * pos.getYCoOrdinate();
-			c++;
-		}
 		
-		c = 'A';
-		for(int i=0;i<25;i++)
-		{
-			XYLocation pos = getPositionOf(c);
-			hash += 10 * pos.getXCoOrdinate() + 20* pos.getYCoOrdinate();
-			c++;
+		for(String clave : _cars.keySet()) {
+			XYLocation pos = getPositionOf(clave.charAt(0));
+			hash += 11 * pos.getXCoOrdinate() + 19 * pos.getYCoOrdinate();
 		}
 		
 		return hash;
