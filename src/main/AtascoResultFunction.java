@@ -8,7 +8,7 @@ public class AtascoResultFunction implements ResultFunction {
 	@Override
 	public Object result(Object s, Action a) {
 		EstadoAtasco estado = (EstadoAtasco) s;
-		if (EstadoAtasco.palante.equals(a)) {
+		if (EstadoAtasco.palante.equals(a)/* && estado.canMoveCar(EstadoAtasco.palante, car)*/) {
 			EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
 			//nuevoEstado.moverPalante(c);
 			return nuevoEstado;

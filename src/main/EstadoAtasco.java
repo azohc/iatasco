@@ -13,6 +13,8 @@ public class EstadoAtasco {
 	private char[][] _tablero;
 	private int _tam;
 	
+	
+	
 	//FICHERO PREDETERMINADO
 	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";		//TODO CHECK PATH
 
@@ -184,6 +186,10 @@ public class EstadoAtasco {
 			}
 			x++;
 		}
+		
+		if(x==_tam && y == _tam)
+			x = y = 0;
+		
 		return new XYLocation(x, y);		
 	}
 	
@@ -217,7 +223,8 @@ public class EstadoAtasco {
 		this._tam = _tam;
 	}
 	
-	public int hashcode()
+	@Override
+	public int hashCode()
 	{
 		//Suma las posiciones (10x +20y) de todos los coches 
 		//obtiene un hash distinto para cada estado
@@ -227,7 +234,7 @@ public class EstadoAtasco {
 		for(int i=0;i<25;i++)
 		{
 			XYLocation pos = getPositionOf(c);
-			hash += 10 * pos.getXCoOrdinate() + 20* pos.getYCoOrdinate();
+			hash += 10 * pos.getXCoOrdinate() + 20 * pos.getYCoOrdinate();
 			c++;
 		}
 		
