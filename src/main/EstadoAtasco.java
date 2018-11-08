@@ -12,25 +12,6 @@ import aima.core.agent.impl.DynamicAction;
 import aima.core.util.datastructure.XYLocation;
 
 public class EstadoAtasco {
-
-//	private class Pair{
-//		private Action a;
-//		private char c;
-//		
-//		public Pair(Action A, char C)
-//		{
-//			a = A;
-//			c = C;
-//		}
-//		
-//		public Action getAction() {
-//			return a;
-//		}
-//		
-//		public char getCar() {
-//			return c;
-//		}
-//	}
 	
 	private char[][] _tablero;
 	private int _tam;
@@ -101,8 +82,9 @@ public class EstadoAtasco {
 					_tablero[i][j] = c;
 					if(c != PARED && c != META && c != HUECO && !_cars.containsKey(c+""))
 					{
-						_cars.put(c+"", new XYLocation(i,j));
-
+						_cars.put(c+"", new XYLocation(j, i));	//TODO revar cambiado i por j en constr
+						//como aqui guardas en la x <= j y en la y <=i,
+						//en la linea 175 se "deshace" el cruce de variables, para usar j e i en vez de x e y
 						_actions.add(new DynamicAction(c+"PAL"));
 						_actions.add(new DynamicAction(c+"PAT"));						
 					}
@@ -117,32 +99,33 @@ public class EstadoAtasco {
 	public void moverPalante(char c) {
 		if(c == PARED || c == META || c == HUECO)
 			return;
-		int x = 0, y = 0;
+	
+		int i = 0, j = 0;
 		boolean esHorizontal = Character.isLowerCase(c);
 		
-		while(x < _tam && _tablero[x][y] != c) {
-			while(y < _tam && _tablero[x][y] != c) {
-				y++;
-			}
-			x++;
+		while(i < _tam && _tablero[i][j] != c) {
+			while(j < _tam && _tablero[i][j] != c) 
+				j++;
+			i++;
 		}
-		int i;
+		
+		int carIter;
 		if(esHorizontal) {
-			i = y + 1;
-			while(_tablero[x][i++] == c)
+			carIter = j + 1;
+			while(_tablero[i][carIter++] == c)
 						
-			if(i < _tam - 1 && _tablero[x][i] == HUECO) {
-				_tablero[x][i] = c;
-				_tablero[x][y] = HUECO;
+			if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO) {
+				_tablero[i][carIter] = c;
+				_tablero[i][j] = HUECO;
 			}
 		}
 		else {
-			i = x + 1;
-			while(_tablero[i++][y] == c)
+			carIter = i + 1;
+			while(_tablero[carIter++][j] == c)
 			
-			if(i < _tam - 1 && _tablero[i][y] == HUECO) {
-				_tablero[i][y] = c;
-				_tablero[x][y] = HUECO;
+			if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO) {
+				_tablero[carIter][j] = c;
+				_tablero[i][j] = HUECO;
 			}
 		}
 	}
@@ -150,32 +133,33 @@ public class EstadoAtasco {
 	public void moverPatras(char c) {
 		if(c == PARED || c == META || c == HUECO)
 			return;
-		int x = 0, y = 0;
+		
+		int i = 0, j = 0;
 		boolean esHorizontal = Character.isLowerCase(c);
 		
-		while(x < _tam && _tablero[x][y] != c) {
-			while(y < _tam && _tablero[x][y] != c) {
-				y++;
-			}
-			x++;
+		while(i < _tam && _tablero[i][j] != c) {
+			while(j < _tam && _tablero[i][j] != c) 
+				j++;
+			i++;
 		}
-		int i;
+		
+		int carIter;
 		if(esHorizontal) {
-			i = y + 1;
-			while(_tablero[x][i++] == c)	
+			carIter = j + 1;
+			while(_tablero[i][carIter++] == c)	
 						
-			if(y > 1 && _tablero[x][y-1] == HUECO) {
-				_tablero[x][y - 1] = c;
-				_tablero[x][i - 1] = HUECO;
+			if(j > 1 && _tablero[i][j-1] == HUECO) {
+				_tablero[i][j - 1] = c;
+				_tablero[i][carIter - 1] = HUECO;
 			}
 		}
 		else {
-			i = x + 1;
-			while(_tablero[i++][y] == c)	
+			carIter = i + 1;
+			while(_tablero[carIter++][j] == c)	
 				
-			if(x > 1 && _tablero[x-1][y] == HUECO) {
-				_tablero[x - 1][y] = c;
-				_tablero[i - 1][y] = HUECO;
+			if(i > 1 && _tablero[i-1][j] == HUECO) {
+				_tablero[i - 1][j] = c;
+				_tablero[carIter - 1][j] = HUECO;
 			}
 		}
 	}
@@ -183,32 +167,35 @@ public class EstadoAtasco {
 	public boolean canMoveCar(Action where, char car) {
 		if(car == PARED || car == META || car == HUECO)
 			return false;
+		
 		XYLocation carLoc = getPositionOf(car);
 		boolean esHorizontal = Character.isLowerCase(car);
-		int i = 0, x = carLoc.getXCoOrdinate(), y = carLoc.getYCoOrdinate();
+		
+		//cambiado i -> iter, x -> j,  y -> i			
+		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	//TODO revar
 		
 		if(where.equals(palante)) {
 			if(esHorizontal) {
-				i = y + 1;
-				while(_tablero[x][i++] == car)	
+				carIter = i + 1;
+				while(_tablero[j][carIter++] == car)	
 							
-				if(i < _tam - 1 && _tablero[x][i] == HUECO) 
+				if(carIter < _tam - 1 && _tablero[j][carIter] == HUECO) 
 					return true;
 			}
 			else {
-				i = x + 1;
-				while(_tablero[i++][y] == car)
+				carIter = j + 1;
+				while(_tablero[carIter++][i] == car)
 				
-				if(i < _tam - 1 && _tablero[i][y] == HUECO) 
+				if(carIter < _tam - 1 && _tablero[carIter][i] == HUECO) 
 					return true;
 			}
 		}
 		else if(where.equals(patras)){
 			if(esHorizontal) 
-				if(y > 1 && _tablero[x][y-1] == HUECO) 
+				if(i > 1 && _tablero[j][i-1] == HUECO) 
 					return true;
 			else 
-				if(x > 1 && _tablero[x-1][y] == HUECO) 
+				if(j > 1 && _tablero[j-1][i] == HUECO) 
 					return true;
 		}
 		return false;
@@ -227,7 +214,7 @@ public class EstadoAtasco {
 		if(x==_tam && y == _tam)
 			x = y = 0;
 		
-		return new XYLocation(x, y);		
+		return new XYLocation(y, x);	//TODO revar , cambiado y por x en el constr
 	}
 	
 	
