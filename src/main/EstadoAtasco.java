@@ -85,8 +85,13 @@ public class EstadoAtasco {
 						_cars.put(c+"", new XYLocation(j, i));	//TODO revar cambiado i por j en constr
 						//como aqui guardas en la x <= j y en la y <=i,
 						//en la linea 175 se "deshace" el cruce de variables, para usar j e i en vez de x e y
+						
+						//TODO:fixazohc
 						_actions.add(new DynamicAction(c+"PAL"));
-						_actions.add(new DynamicAction(c+"PAT"));						
+						_actions.add(new DynamicAction(c+ "PAT"));
+
+						//_actions.add(palante);//TODO:MIRAR
+						//_actions.add(patras);						
 					}
 				}
 			}				
