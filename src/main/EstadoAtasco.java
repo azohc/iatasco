@@ -3,9 +3,12 @@ package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import aima.core.agent.Action;
 import aima.core.agent.impl.DynamicAction;
@@ -28,7 +31,7 @@ public class EstadoAtasco {
 
 	
 	//FICHERO PREDETERMINADO
-	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";	
+	private static String FICHERO_PREDETERMINADO = "misc/niveles/nivelDelEnunciado.txt";	
 
 	//CODIFICACION FICHERO
 	private static final int FICH_COD_NIVEL = 1;
@@ -44,7 +47,14 @@ public class EstadoAtasco {
 		cargarTablero(null, 0);
 	}
 	
-	//TODO aniadir constructor para usar otro fichero / nivel
+	public EstadoAtasco(String fichero) {
+		
+		System.out.println("Archivo para cargar niveles: " + fichero + System.lineSeparator());
+		System.out.println("Introduzca el nivel a cargar: ");
+		Scanner s = new Scanner(System.in);
+		int nivel = s.nextInt();
+		cargarTablero(fichero, nivel);
+	}
 	
 	public EstadoAtasco(EstadoAtasco e) {
 		
@@ -72,7 +82,7 @@ public class EstadoAtasco {
 			String linea = bf.readLine();
 			String[] plinea = linea.split("\\s+");	
 			
-			while(Integer.parseInt(plinea[FICH_COD_NIVEL]) != nivel)	{			
+			while(Integer.parseInt(plinea[FICH_COD_NIVEL]) != nivel){			
 				linea = bf.readLine();
 				plinea = linea.split("\\s+");	
 			}
@@ -114,9 +124,11 @@ public class EstadoAtasco {
 			carIter = j + 1;
 			while(_tablero[i][carIter++] == coche)
 						
-			if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO) {
+			if((carIter < _tam - 1 && _tablero[i][carIter] == HUECO) 
+					|| (coche == 'z' && _tablero[i][carIter] == META)) {
 				_tablero[i][carIter] = coche;
 				_tablero[i][j] = HUECO;
+				
 			}
 			
 			XYLocation newLocation = new XYLocation(j+1, i);
@@ -208,36 +220,23 @@ public class EstadoAtasco {
 		return false;
 	}
 	
-	public XYLocation getPositionOf(char c) {
-		int x = 0, y = 0;
-		
-		while(x < _tam && _tablero[x][y] != c) {
-			while(y < _tam && _tablero[x][y] != c) {
-				y++;
-			}
-			x++;
-			y = 0;
-		}
-		
-		if(x==_tam && y == _tam)
-			x = y = 0;
-		
-		return new XYLocation(y, x);	
-	}
-	
 	
 	@Override
 	public boolean equals(Object o) {
-
+		EstadoAtasco e = (EstadoAtasco) o;
 		if (this == o) 
 			return true;
 		
-		if ((o == null) || (this.getClass() != o.getClass()) || _tam != ((EstadoAtasco) o).getTam()) 
+		if ((o == null) || (this.getClass() != o.getClass()) || _tam != e.getTam()
+				|| _carCoords.size() != e.getCarMap().size() || _actions.size() != e.getActionList().size()) 
+			return false;
+		
+		if(!_carCoords.equals(e.getCarMap()))
 			return false;
 		
 		for (int i = 0; i < _tam; i++) 
 			for(int j = 0; j < _tam; j++)
-				if(_tablero[i][j] != ((EstadoAtasco) o).getTablero()[i][j])
+				if(_tablero[i][j] != e.getTablero()[i][j])
 					return false;
 		
 		return true;

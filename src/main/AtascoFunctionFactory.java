@@ -35,6 +35,8 @@ public class AtascoFunctionFactory {
 		public Object result(Object o, Action a) {
 			EstadoAtasco estado = (EstadoAtasco) o;
 			
+			//TODO que llegue la ejecucion aca
+			
 			char car =  a.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
 			Action auxAction = new DynamicAction(a.toString().substring(14, a.toString().length() - 1));
 									

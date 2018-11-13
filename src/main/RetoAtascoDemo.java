@@ -15,10 +15,13 @@ import aima.core.search.uninformed.BreadthFirstSearch;
 
 public class RetoAtascoDemo {
 	
-	private static EstadoAtasco _estadoInicial;
+	private static EstadoAtasco _estadoInicial = new EstadoAtasco();
 	
 	public static void main(String[] args) {
-		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recto" + System.lineSeparator());
+		if(args.length > 0)	// Si se quiere usar un fichero con niveles distinto, 
+			_estadoInicial = new EstadoAtasco(args[0]); // Se ha de pasar como unico parametro
+			
+//		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recto" + System.lineSeparator());
 //		retoAtascoAStarCaminoRectoDemo(); 
 //		retoAtascoGBFCaminoRectoDemo();		
 //		
@@ -36,7 +39,6 @@ public class RetoAtascoDemo {
 
 	private static void retoAtascoDemo() 
 	{
-		_estadoInicial = new EstadoAtasco();
 		System.out.println("\nRetoAtascoDemo-->");
 		try{
 			Problem problema = new Problem(_estadoInicial, 
