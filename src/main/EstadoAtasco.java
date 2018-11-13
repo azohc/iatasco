@@ -16,8 +16,11 @@ public class EstadoAtasco {
 	private char[][] _tablero;
 	private int _tam;
 	
-	private HashMap<String, XYLocation> _cars;
-	private List<Action> _actions; 	//TODO mirar si esto es tan reconocible como lo siguiente
+	//para saber en que posicion se encuentra cada coche
+	private HashMap<Character, XYLocation> _carCoords;
+	
+	//para guardar acciones que relacionan a un coche con su identificador
+	private List<Action> _actions; 	
 
 	public static Action palante = new DynamicAction("PAL");
 	public static Action patras = new DynamicAction("PAT");
@@ -25,7 +28,7 @@ public class EstadoAtasco {
 
 	
 	//FICHERO PREDETERMINADO
-	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";		//TODO CHECK PATH
+	private static String FICHERO_PREDETERMINADO = "misc/niveles.txt";	
 
 	//CODIFICACION FICHERO
 	private static final int FICH_COD_NIVEL = 1;
@@ -41,6 +44,8 @@ public class EstadoAtasco {
 		cargarTablero(null, 0);
 	}
 	
+	//TODO aniadir constructor para usar otro fichero / nivel
+	
 	public EstadoAtasco(EstadoAtasco e) {
 		
 		_tablero = new char[e._tam][e._tam];
@@ -49,21 +54,21 @@ public class EstadoAtasco {
 			System.arraycopy(e._tablero[i], 0, _tablero[i], 0, e._tam);
 		
 		_tam = e._tam;
-		_cars = new HashMap<String,XYLocation>(e._cars);
+		_carCoords = new HashMap<Character,XYLocation>(e._carCoords);
+		for(Action a : e.getActionList())
+			_actions.add(a);
 	}
 	
-	
+	//Se asume que no seran introducidos tableros con una distribucion de coches erronea
 	public void cargarTablero(String fichero, int nivel) {
 		if (fichero == null)
 			fichero = FICHERO_PREDETERMINADO;
 		
-		_cars = new HashMap<String, XYLocation>();
-		
-	
-		File f = new File(fichero);
-		try {
-			BufferedReader bf =  new BufferedReader(new FileReader(f));
+		_carCoords = new HashMap<Character, XYLocation>();
+		_actions = new LinkedList<Action>();
 			
+		try {
+			BufferedReader bf =  new BufferedReader(new FileReader(new File(fichero)));
 			String linea = bf.readLine();
 			String[] plinea = linea.split("\\s+");	
 			
@@ -77,21 +82,15 @@ public class EstadoAtasco {
 			
 			for(int i = 0; i < _tam; i++) {
 				linea = bf.readLine();
+				
 				for(int j = 0; j < _tam; j++) {
 					char c = linea.charAt(j);
 					_tablero[i][j] = c;
-					if(c != PARED && c != META && c != HUECO && !_cars.containsKey(c+""))
-					{
-						_cars.put(c+"", new XYLocation(j, i));	//TODO revar cambiado i por j en constr
-						//como aqui guardas en la x <= j y en la y <=i,
-						//en la linea 175 se "deshace" el cruce de variables, para usar j e i en vez de x e y
-						
-						//TODO:fixazohc
-						_actions.add(new DynamicAction(c+"PAL"));
-						_actions.add(new DynamicAction(c+ "PAT"));
-
-						//_actions.add(palante);//TODO:MIRAR
-						//_actions.add(patras);						
+					
+					if(c != PARED && c != META && c != HUECO && !_carCoords.containsKey(c)){
+						_carCoords.put(c, new XYLocation(j, i));
+						_actions.add(new DynamicAction(c + "PAL"));
+						_actions.add(new DynamicAction(c + "PAT"));
 					}
 				}
 			}				
@@ -101,71 +100,75 @@ public class EstadoAtasco {
 		}
 	}
 	
-	public void moverPalante(char c) {
-		if(c == PARED || c == META || c == HUECO)
+	public void moverPalante(char coche) {
+		if(coche == PARED || coche == META || coche == HUECO)
 			return;
-	
-		int i = 0, j = 0;
-		boolean esHorizontal = Character.isLowerCase(c);
 		
-		while(i < _tam && _tablero[i][j] != c) {
-			while(j < _tam && _tablero[i][j] != c) 
-				j++;
-			i++;
-		}
+		boolean esHorizontal = Character.isLowerCase(coche);
+		
+		XYLocation coords = _carCoords.get(coche);
+		int i = coords.getYCoOrdinate(), j = coords.getXCoOrdinate();
 		
 		int carIter;
 		if(esHorizontal) {
 			carIter = j + 1;
-			while(_tablero[i][carIter++] == c)
+			while(_tablero[i][carIter++] == coche)
 						
 			if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO) {
-				_tablero[i][carIter] = c;
+				_tablero[i][carIter] = coche;
 				_tablero[i][j] = HUECO;
 			}
+			
+			XYLocation newLocation = new XYLocation(j+1, i);
+			_carCoords.put(coche, newLocation);
 		}
 		else {
 			carIter = i + 1;
-			while(_tablero[carIter++][j] == c)
+			while(_tablero[carIter++][j] == coche)
 			
 			if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO) {
-				_tablero[carIter][j] = c;
+				_tablero[carIter][j] = coche;
 				_tablero[i][j] = HUECO;
 			}
+			
+			XYLocation newLocation = new XYLocation(j, i+1);
+			_carCoords.put(coche, newLocation);		
 		}
 	}
 	
-	public void moverPatras(char c) {
-		if(c == PARED || c == META || c == HUECO)
+	public void moverPatras(char coche) {
+		if(coche == PARED || coche == META || coche == HUECO)
 			return;
+
+		boolean esHorizontal = Character.isLowerCase(coche);
 		
-		int i = 0, j = 0;
-		boolean esHorizontal = Character.isLowerCase(c);
-		
-		while(i < _tam && _tablero[i][j] != c) {
-			while(j < _tam && _tablero[i][j] != c) 
-				j++;
-			i++;
-		}
+		XYLocation coords = _carCoords.get(coche);
+		int i = coords.getYCoOrdinate(), j = coords.getXCoOrdinate();
 		
 		int carIter;
 		if(esHorizontal) {
 			carIter = j + 1;
-			while(_tablero[i][carIter++] == c)	
+			while(_tablero[i][carIter++] == coche)	
 						
 			if(j > 1 && _tablero[i][j-1] == HUECO) {
-				_tablero[i][j - 1] = c;
+				_tablero[i][j - 1] = coche;
 				_tablero[i][carIter - 1] = HUECO;
 			}
+			
+			XYLocation newLocation = new XYLocation(j-1, i);
+			_carCoords.put(coche, newLocation);	
 		}
 		else {
 			carIter = i + 1;
-			while(_tablero[carIter++][j] == c)	
+			while(_tablero[carIter++][j] == coche)	
 				
 			if(i > 1 && _tablero[i-1][j] == HUECO) {
-				_tablero[i - 1][j] = c;
+				_tablero[i - 1][j] = coche;
 				_tablero[carIter - 1][j] = HUECO;
 			}
+			
+			XYLocation newLocation = new XYLocation(j, i-1);
+			_carCoords.put(coche, newLocation);	
 		}
 	}
 	
@@ -173,11 +176,10 @@ public class EstadoAtasco {
 		if(car == PARED || car == META || car == HUECO)
 			return false;
 		
-		XYLocation carLoc = getPositionOf(car);
+		XYLocation carLoc = _carCoords.get(car);
 		boolean esHorizontal = Character.isLowerCase(car);
 		
-		//cambiado i -> iter, x -> j,  y -> i			
-		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	//TODO revar
+		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	
 		
 		if(where.equals(palante)) {
 			if(esHorizontal) {
@@ -214,12 +216,13 @@ public class EstadoAtasco {
 				y++;
 			}
 			x++;
+			y = 0;
 		}
 		
 		if(x==_tam && y == _tam)
 			x = y = 0;
 		
-		return new XYLocation(y, x);	//TODO revar , cambiado y por x en el constr
+		return new XYLocation(y, x);	
 	}
 	
 	
@@ -262,12 +265,20 @@ public class EstadoAtasco {
 	{
 		int hash = 0;
 		
-		for(String clave : _cars.keySet()) {
-			XYLocation pos = getPositionOf(clave.charAt(0));
+		for(Character c : _carCoords.keySet()) {
+			XYLocation pos = _carCoords.get(c);
 			hash += 11 * pos.getXCoOrdinate() + 19 * pos.getYCoOrdinate();
 		}
 		
 		return hash;
+	}
+
+	public HashMap<Character, XYLocation> getCarMap() {
+		return _carCoords;
+	}
+
+	public void setCarCoords(HashMap<Character, XYLocation> _carCoords) {
+		this._carCoords = _carCoords;
 	}
 	
 }

@@ -31,25 +31,13 @@ public class AtascoFunctionFactory {
 	
 	
 	
-	private static class AtascoResultFunction implements ResultFunction{
-		public Object result(Object s, Action a) {
-			EstadoAtasco estado = (EstadoAtasco) s;
+	private static class AtascoResultFunction implements ResultFunction {
+		public Object result(Object o, Action a) {
+			EstadoAtasco estado = (EstadoAtasco) o;
 			
-			char car =  a.toString().charAt(0);
-			Action auxAction = new DynamicAction(a.toString().substring(1));
-						
-//			for
-//				if
-//					action.equals(a) && estacanomovecar(action, car)
-//						nuevoestado = estadoatasco estado
-//						nuevoestado.segunlaaccionmover(car)
-//						return nuevoestado
-		
-			//teniendo en 'a' la acción (codificada con el caracter correspondiente
-			//al coche, parseando el char para obtener el coche y creando otra una
-			//accion auxiliar sin el char, su valor será "PAL" o "PAT", equivalente
-			//a una de las funciones ya definidas, sabiendo cual es el coche a mover
-			
+			char car =  a.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
+			Action auxAction = new DynamicAction(a.toString().substring(14, a.toString().length() - 1));
+									
 			if (EstadoAtasco.palante.equals(auxAction)
 					&& estado.canMoveCar(EstadoAtasco.palante, car)) {
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
@@ -65,7 +53,7 @@ public class AtascoFunctionFactory {
 			
 			// The Action is not understood or is a NoOp
 			// the result will be the current state.
-			return s;
+			return o;
 		}
 			
 	}
@@ -73,15 +61,15 @@ public class AtascoFunctionFactory {
 
 	private static class AtascoActionsFunction implements ActionsFunction {
 		@Override
-		public Set<Action> actions(Object e) {
-			EstadoAtasco estado = (EstadoAtasco) e;
+		public Set<Action> actions(Object o) {
+			EstadoAtasco estado = (EstadoAtasco) o;
 			
 			Set<Action> actions = new LinkedHashSet<Action>();
 			
 			List<Action> l = estado.getActionList();
 			
 			for(Action a : l) {
-				char car =  a.toString().charAt(0);
+				char car =  a.toString().charAt(13); // a.toString <= "Action[name==zPAL]", por ejemplo
 				if(estado.canMoveCar(a, car))
 					actions.add(a);				
 			}
