@@ -27,7 +27,7 @@ public class HeuristicaDistanciaMasObstaculos implements HeuristicFunction {
 		char[][] tablero = e.getTablero();
 		
 		int carIter = j + 1;	 //Iterador para llegar hasta el final del coche
-		while(tablero[i][carIter] == 'z')
+		while(carIter < e.getTam() && tablero[i][carIter] == 'z')
 			carIter++;			//carIter queda en la celda posterior al coche
 			
 		List<Character> obstaculos = new LinkedList<Character>();

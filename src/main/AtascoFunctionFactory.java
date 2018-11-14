@@ -40,6 +40,7 @@ public class AtascoFunctionFactory {
 									
 			if (EstadoAtasco.palante.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)) {
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
+				
 				nuevoEstado.moverPalante(car);
 				return nuevoEstado;
 			}

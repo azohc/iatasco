@@ -116,6 +116,8 @@ public class EstadoAtasco {
 		if(coche == PARED || coche == META || coche == HUECO)
 			return;
 		
+
+		
 		boolean esHorizontal = Character.isLowerCase(coche);
 		
 		XYLocation coords = _carCoords.get(coche);
@@ -191,7 +193,7 @@ public class EstadoAtasco {
 	}
 	
 	public boolean canMoveCar(Action accionConCodCoche) {
-		char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
+		char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]"
 		
 		if(car == PARED || car == META || car == HUECO)
 			return false;
@@ -209,7 +211,8 @@ public class EstadoAtasco {
 				while(_tablero[i][carIter] == car)
 					carIter++;
 							
-				if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO) 
+				if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO
+						|| (car == 'z' && _tablero[i][carIter] == META)) 
 					return true;
 			}
 			else {
@@ -218,7 +221,8 @@ public class EstadoAtasco {
 					carIter++;
 				
 				
-				if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO) 
+				if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO
+						|| (car == 'z' && _tablero[i][carIter] == META)) 
 					return true;
 			}
 		}
