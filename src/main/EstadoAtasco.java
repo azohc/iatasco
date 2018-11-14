@@ -190,8 +190,8 @@ public class EstadoAtasco {
 		}
 	}
 	
-	public boolean canMoveCar(Action where) {
-		char car =  where.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
+	public boolean canMoveCar(Action accionConCodCoche) {
+		char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
 		
 		if(car == PARED || car == META || car == HUECO)
 			return false;
@@ -199,7 +199,7 @@ public class EstadoAtasco {
 		XYLocation carLoc = _carCoords.get(car);
 		boolean esHorizontal = Character.isLowerCase(car);
 
-		Action accionSinCodCoche = new DynamicAction(where.toString().substring(14, where.toString().length() - 1));
+		Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(14, accionConCodCoche.toString().length() - 1));
 		
 		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	
 		

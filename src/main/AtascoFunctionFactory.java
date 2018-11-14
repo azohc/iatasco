@@ -45,7 +45,7 @@ public class AtascoFunctionFactory {
 			}
 			else if (EstadoAtasco.patras.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)){
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
-				nuevoEstado.moverPalante(car);
+				nuevoEstado.moverPatras(car);
 				return nuevoEstado;
 			}
 			
@@ -64,9 +64,7 @@ public class AtascoFunctionFactory {
 			
 			Set<Action> actions = new LinkedHashSet<Action>();
 			
-			List<Action> l = estado.getActionList();
-			
-			for(Action accionConCodCoche : l) {
+			for(Action accionConCodCoche : estado.getActionList()) {
 				if(estado.canMoveCar(accionConCodCoche))
 					actions.add(accionConCodCoche);				
 			}

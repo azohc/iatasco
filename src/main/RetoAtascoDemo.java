@@ -26,7 +26,7 @@ public class RetoAtascoDemo {
 		retoAtascoGBFCaminoRectoDemo();		
 		
 		System.out.println(System.lineSeparator());
-		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recursivo");
+		System.out.println("Busquedas informadas: Heuristica constante");
 		retoAtascoAStarCaminoRecursivoDemo();
 		retoAtascoGBFCaminoRecursivoDemo();
 		
