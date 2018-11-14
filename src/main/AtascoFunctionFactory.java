@@ -32,22 +32,18 @@ public class AtascoFunctionFactory {
 	
 	
 	private static class AtascoResultFunction implements ResultFunction {
-		public Object result(Object o, Action a) {
+		public Object result(Object o, Action accionConCodCoche) {
 			EstadoAtasco estado = (EstadoAtasco) o;
 			
-			//TODO que llegue la ejecucion aca
-			
-			char car =  a.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
-			Action auxAction = new DynamicAction(a.toString().substring(14, a.toString().length() - 1));
+			char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
+			Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(14, accionConCodCoche.toString().length() - 1));
 									
-			if (EstadoAtasco.palante.equals(auxAction)
-					&& estado.canMoveCar(EstadoAtasco.palante, car)) {
+			if (EstadoAtasco.palante.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)) {
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
 				nuevoEstado.moverPalante(car);
 				return nuevoEstado;
 			}
-			else if (EstadoAtasco.patras.equals(auxAction)
-					&& estado.canMoveCar(EstadoAtasco.palante, car)){
+			else if (EstadoAtasco.patras.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)){
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
 				nuevoEstado.moverPalante(car);
 				return nuevoEstado;
@@ -70,10 +66,9 @@ public class AtascoFunctionFactory {
 			
 			List<Action> l = estado.getActionList();
 			
-			for(Action a : l) {
-				char car =  a.toString().charAt(13); // a.toString <= "Action[name==zPAL]", por ejemplo
-				if(estado.canMoveCar(a, car))
-					actions.add(a);				
+			for(Action accionConCodCoche : l) {
+				if(estado.canMoveCar(accionConCodCoche))
+					actions.add(accionConCodCoche);				
 			}
 			
 			return actions;

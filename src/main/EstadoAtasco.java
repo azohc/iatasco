@@ -65,6 +65,8 @@ public class EstadoAtasco {
 		
 		_tam = e._tam;
 		_carCoords = new HashMap<Character,XYLocation>(e._carCoords);
+		_actions = new LinkedList<Action>();
+		
 		for(Action a : e.getActionList())
 			_actions.add(a);
 	}
@@ -122,7 +124,8 @@ public class EstadoAtasco {
 		int carIter;
 		if(esHorizontal) {
 			carIter = j + 1;
-			while(_tablero[i][carIter++] == coche)
+			while(_tablero[i][carIter] == coche)
+				carIter++;
 						
 			if((carIter < _tam - 1 && _tablero[i][carIter] == HUECO) 
 					|| (coche == 'z' && _tablero[i][carIter] == META)) {
@@ -136,7 +139,8 @@ public class EstadoAtasco {
 		}
 		else {
 			carIter = i + 1;
-			while(_tablero[carIter++][j] == coche)
+			while(_tablero[carIter][j] == coche)
+				carIter++;
 			
 			if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO) {
 				_tablero[carIter][j] = coche;
@@ -160,7 +164,8 @@ public class EstadoAtasco {
 		int carIter;
 		if(esHorizontal) {
 			carIter = j + 1;
-			while(_tablero[i][carIter++] == coche)	
+			while(_tablero[i][carIter] == coche)
+				carIter++;
 						
 			if(j > 1 && _tablero[i][j-1] == HUECO) {
 				_tablero[i][j - 1] = coche;
@@ -172,7 +177,8 @@ public class EstadoAtasco {
 		}
 		else {
 			carIter = i + 1;
-			while(_tablero[carIter++][j] == coche)	
+			while(_tablero[carIter][j] == coche)
+				carIter++;
 				
 			if(i > 1 && _tablero[i-1][j] == HUECO) {
 				_tablero[i - 1][j] = coche;
@@ -184,37 +190,45 @@ public class EstadoAtasco {
 		}
 	}
 	
-	public boolean canMoveCar(Action where, char car) {
+	public boolean canMoveCar(Action where) {
+		char car =  where.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
+		
 		if(car == PARED || car == META || car == HUECO)
 			return false;
 		
 		XYLocation carLoc = _carCoords.get(car);
 		boolean esHorizontal = Character.isLowerCase(car);
+
+		Action accionSinCodCoche = new DynamicAction(where.toString().substring(14, where.toString().length() - 1));
 		
 		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	
 		
-		if(where.equals(palante)) {
+		if(accionSinCodCoche.equals(palante)) {
 			if(esHorizontal) {
-				carIter = i + 1;
-				while(_tablero[j][carIter++] == car)	
+				carIter = j + 1;
+				while(_tablero[i][carIter] == car)
+					carIter++;
 							
-				if(carIter < _tam - 1 && _tablero[j][carIter] == HUECO) 
+				if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO) 
 					return true;
 			}
 			else {
-				carIter = j + 1;
-				while(_tablero[carIter++][i] == car)
+				carIter = i + 1;
+				while(_tablero[carIter][j] == car) 
+					carIter++;
 				
-				if(carIter < _tam - 1 && _tablero[carIter][i] == HUECO) 
+				
+				if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO) 
 					return true;
 			}
 		}
-		else if(where.equals(patras)){
-			if(esHorizontal) 
-				if(i > 1 && _tablero[j][i-1] == HUECO) 
+		else if(accionSinCodCoche.equals(patras)){
+			if(esHorizontal) {
+				if(i > 1 && _tablero[i][j-1] == HUECO) 
 					return true;
+			}
 			else 
-				if(j > 1 && _tablero[j-1][i] == HUECO) 
+				if(j > 1 && _tablero[i-1][j] == HUECO) 
 					return true;
 		}
 		return false;

@@ -21,23 +21,24 @@ public class RetoAtascoDemo {
 		if(args.length > 0)	// Si se quiere usar un fichero con niveles distinto, 
 			_estadoInicial = new EstadoAtasco(args[0]); // Se ha de pasar como unico parametro
 			
-//		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recto" + System.lineSeparator());
-//		retoAtascoAStarCaminoRectoDemo(); 
-//		retoAtascoGBFCaminoRectoDemo();		
-//		
-//		System.out.println(System.lineSeparator());
-//		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recursivo" + System.lineSeparator());
-//		retoAtascoAStarCaminoRecursivoDemo();
-//		retoAtascoGBFCaminoRecursivoDemo();
-//		
-//		System.out.println(System.lineSeparator());
-//		System.out.println("Busquedas no informadas:" + System.lineSeparator());
-		retoAtascoDemo();
+		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recto");
+		retoAtascoAStarCaminoRectoDemo(); 
+		retoAtascoGBFCaminoRectoDemo();		
+		
+		System.out.println(System.lineSeparator());
+		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recursivo");
+		retoAtascoAStarCaminoRecursivoDemo();
+		retoAtascoGBFCaminoRecursivoDemo();
+		
+		System.out.println(System.lineSeparator());
+		System.out.println("Busquedas no informadas: Breadth First Search" );
+		retoAtascoBFS();
+		
 		//TODO meter busquedas no informadas
 	}
 	
 
-	private static void retoAtascoDemo() 
+	private static void retoAtascoBFS() 
 	{
 		System.out.println("\nRetoAtascoDemo-->");
 		try{
@@ -89,7 +90,7 @@ public class RetoAtascoDemo {
 					AtascoFunctionFactory.getResultFunction(), 
 					new AtascoGoalTest(), new AtascoStepCostFunction());
 			
-			SearchForActions busqueda = new AStarSearch(new GraphSearch(), new HeuristicaBloqueoCaminoRecursivo());
+			SearchForActions busqueda = new AStarSearch(new GraphSearch(), new HeuristicaConstante());
 			SearchAgent agent = new SearchAgent(problema, busqueda);
 			
 			printActions(agent.getActions());
@@ -129,7 +130,7 @@ public class RetoAtascoDemo {
 					AtascoFunctionFactory.getResultFunction(), 
 					new AtascoGoalTest(), new AtascoStepCostFunction());
 			
-			SearchForActions busqueda = new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaBloqueoCaminoRecursivo());
+			SearchForActions busqueda = new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaConstante());
 			SearchAgent agent = new SearchAgent(problema, busqueda);
 			
 			printActions(agent.getActions());

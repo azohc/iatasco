@@ -19,7 +19,9 @@ public class HeuristicaBloqueoCaminoRecto implements HeuristicFunction{
 		char[][] tablero = e.getTablero();
 		
 		int carIter = j + 1;
-		while(tablero[i][carIter++] != 'z');
+		while(tablero[i][carIter] == 'z')
+			carIter++;
+		
 		
 		int numCoches = 0;
 		
