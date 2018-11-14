@@ -8,7 +8,7 @@ public class AtascoGoalTest implements GoalTest{
 	public boolean isGoalState(Object state) {
 		EstadoAtasco e = (EstadoAtasco) state;
 		for(int i = 0; i < e.getTam(); i++) 
-			if(e.getTablero()[i][e.getTam() - 1] == 'z')
+			if(e.getTablero()[i][e.getTam() - 1] == EstadoAtasco.COCHE_ROJO)
 				return true;
 		
 		return false;

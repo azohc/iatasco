@@ -35,18 +35,17 @@ public class AtascoFunctionFactory {
 		public Object result(Object o, Action accionConCodCoche) {
 			EstadoAtasco estado = (EstadoAtasco) o;
 			
-			char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]", por ejemplo
-			Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(14, accionConCodCoche.toString().length() - 1));
+			char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==z Forward]", por ejemplo
+			Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(15, accionConCodCoche.toString().length() - 1));
 									
-			if (EstadoAtasco.palante.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)) {
+			if (EstadoAtasco.FORWARD.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)) {
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
-				
-				nuevoEstado.moverPalante(car);
+				nuevoEstado.moveForwards(car);
 				return nuevoEstado;
 			}
-			else if (EstadoAtasco.patras.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)){
+			else if (EstadoAtasco.BACKWARD.equals(accionSinCodCoche) && estado.canMoveCar(accionConCodCoche)){
 				EstadoAtasco nuevoEstado = new EstadoAtasco(estado);
-				nuevoEstado.moverPatras(car);
+				nuevoEstado.moveBackwards(car);
 				return nuevoEstado;
 			}
 			

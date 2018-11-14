@@ -21,50 +21,56 @@ public class HeuristicaDistanciaMasObstaculos implements HeuristicFunction {
 	private double getDistanciaMasObstaculos(EstadoAtasco e){
 		double retVal = 0;
 		
-		XYLocation posCocheASacar = e.getCarMap().get('z');
+		XYLocation posCocheASacar = e.getCarMap().get(EstadoAtasco.COCHE_ROJO);
 		
-		int i = posCocheASacar.getYCoOrdinate(), j = posCocheASacar.getXCoOrdinate();
+		int i_rojo = posCocheASacar.getYCoOrdinate(), j_rojo = posCocheASacar.getXCoOrdinate();
 		char[][] tablero = e.getTablero();
 		
-		int carIter = j + 1;	 //Iterador para llegar hasta el final del coche
-		while(carIter < e.getTam() && tablero[i][carIter] == 'z')
+		int carIter = j_rojo + 1;	 //Iterador para llegar hasta el final del coche
+		while(carIter < e.getTam() && tablero[i_rojo][carIter] == EstadoAtasco.COCHE_ROJO)
 			carIter++;			//carIter queda en la celda posterior al coche
-			
-		List<Character> obstaculos = new LinkedList<Character>();
-		
-		for(; carIter < e.getTam(); carIter++) 
-			if(tablero[i][carIter] != EstadoAtasco.HUECO && tablero[i][carIter] != EstadoAtasco.META) 
-				obstaculos.add(tablero[i][carIter]);
 	
+		//Todos los coches que impidan el paso del coche rojo se meten a una lista
+		List<Character> obstaculos = new LinkedList<Character>();
+	
+		for(; carIter < e.getTam(); carIter++) 
+			if(tablero[i_rojo][carIter] != EstadoAtasco.HUECO && tablero[i_rojo][carIter] != EstadoAtasco.META) 
+				obstaculos.add(tablero[i_rojo][carIter]);
+		
 		retVal += obstaculos.size();
 		
-		//carIter queda en la primera posicion despues del coche a sacar, con lo cual
-		//tamTablero - carIter = movimientos para salir del atasco (sin contar obstaculos)
+		//carIter queda en la primera posicion despues del coche rojo, con lo cual
+		//tamTablero - carIter = movimientos para sacar al coche rojo del atasco (sin contar obstaculos)
 		retVal += e.getTam() - carIter;
 		
-		
 		for(char c : obstaculos) {	//Para cada obstaculo
-			XYLocation cocheBloqLocation = e.getCarMap().get(c);
-			int iObst = cocheBloqLocation.getYCoOrdinate();
-			int jObst = cocheBloqLocation.getXCoOrdinate();
+			//Calculamos sus coordenadas
+			XYLocation cocheBloqLocation = e.getCarMap().get(c);	
+			int i_obst = cocheBloqLocation.getYCoOrdinate();
+			int j_obst = cocheBloqLocation.getXCoOrdinate();
 			
-			carIter = i;
+			carIter = i_obst;
 			int tamCoche = 1;
-			
-			while(tablero[carIter][jObst] == c) {
+			//Obtenemos el tamaño del coche, dejando carIter en la primera posicion posterior al obstaculo
+			while(tablero[carIter][j_obst] == c) {
 				carIter++;
 				tamCoche++;
 			}
 			
 			if(tamCoche == 2)		//Si el obstaculo es un coche, solo hace falta un movimiento para quitarlo
 				retVal++;
+			
 			else {					//En el caso de ser un camion...
-				int resta = iObst - i;
+				//Se calcula la cantidad de movimientos necesarios restando las posiciones verticales
+				//del coche rojo y del coche obstaculo. 
+				int resta = i_obst - i_rojo;
 				
+				//Solo puede haber tres configuraciones en los que un camion bloquea a un coche
+
 				//Si la ultima celda del camion esta en la fila de la meta, 
 				//tiene que haber un hueco encima del camion para sacarlo en 1 movimiento, si no, son 3
 				if(resta == -2)			
-					retVal += tablero[iObst - 1][jObst] != EstadoAtasco.PARED ? 1 : 3;	
+					retVal += tablero[i_obst - 1][j_obst] != EstadoAtasco.PARED ? 1 : 3;	
 				
 				//Si el medio del camion esta en la fila de la meta, 
 				//dos movimientos en cualquiera de las direcciones lo desatasca
@@ -74,7 +80,7 @@ public class HeuristicaDistanciaMasObstaculos implements HeuristicFunction {
 				//Si la primera celda del camion esta en la fila de la meta, 
 				//tiene que haber un hueco debajo del camion para sacarlo en 1 movimiento, si no, son 3
 				else					
-					retVal += tablero[carIter][jObst] != EstadoAtasco.PARED ? 1 : 3;
+					retVal += tablero[carIter][j_obst] != EstadoAtasco.PARED ? 1 : 3;
 			}
 		}
 		

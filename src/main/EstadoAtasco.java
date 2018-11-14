@@ -25,8 +25,8 @@ public class EstadoAtasco {
 	//para guardar acciones que relacionan a un coche con su identificador
 	private List<Action> _actions; 	
 
-	public static Action palante = new DynamicAction("PAL");
-	public static Action patras = new DynamicAction("PAT");
+	public static Action FORWARD = new DynamicAction("Forward");
+	public static Action BACKWARD = new DynamicAction("Backward");
 
 
 	
@@ -40,7 +40,7 @@ public class EstadoAtasco {
 	protected static final char PARED = '#';
 	protected static final char META = '@';
 	protected static final char HUECO = '.';
-
+	protected static final char COCHE_ROJO = 'r';
 
 	
 	public EstadoAtasco() {
@@ -49,7 +49,7 @@ public class EstadoAtasco {
 	
 	public EstadoAtasco(String fichero) {
 		
-		System.out.println("Archivo para cargar niveles: " + fichero + System.lineSeparator());
+		System.out.println("Ruta del archivo para cargar nivel: " + fichero + System.lineSeparator());
 		System.out.println("Introduzca el nivel a cargar: ");
 		Scanner s = new Scanner(System.in);
 		int nivel = s.nextInt();
@@ -101,8 +101,8 @@ public class EstadoAtasco {
 					
 					if(c != PARED && c != META && c != HUECO && !_carCoords.containsKey(c)){
 						_carCoords.put(c, new XYLocation(j, i));
-						_actions.add(new DynamicAction(c + "PAL"));
-						_actions.add(new DynamicAction(c + "PAT"));
+						_actions.add(new DynamicAction(c + " Forward"));
+						_actions.add(new DynamicAction(c + " Backward"));
 					}
 				}
 			}				
@@ -112,12 +112,10 @@ public class EstadoAtasco {
 		}
 	}
 	
-	public void moverPalante(char coche) {
+	public void moveForwards(char coche) {
 		if(coche == PARED || coche == META || coche == HUECO)
 			return;
-		
-
-		
+				
 		boolean esHorizontal = Character.isLowerCase(coche);
 		
 		XYLocation coords = _carCoords.get(coche);
@@ -130,10 +128,9 @@ public class EstadoAtasco {
 				carIter++;
 						
 			if((carIter < _tam - 1 && _tablero[i][carIter] == HUECO) 
-					|| (coche == 'z' && _tablero[i][carIter] == META)) {
+					|| (coche == COCHE_ROJO && _tablero[i][carIter] == META)) {
 				_tablero[i][carIter] = coche;
 				_tablero[i][j] = HUECO;
-				
 			}
 			
 			XYLocation newLocation = new XYLocation(j+1, i);
@@ -154,7 +151,7 @@ public class EstadoAtasco {
 		}
 	}
 	
-	public void moverPatras(char coche) {
+	public void moveBackwards(char coche) {
 		if(coche == PARED || coche == META || coche == HUECO)
 			return;
 
@@ -193,7 +190,7 @@ public class EstadoAtasco {
 	}
 	
 	public boolean canMoveCar(Action accionConCodCoche) {
-		char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==zPAL]"
+		char car =  accionConCodCoche.toString().charAt(13);	// a.toString <= "Action[name==z Forward]"
 		
 		if(car == PARED || car == META || car == HUECO)
 			return false;
@@ -201,18 +198,18 @@ public class EstadoAtasco {
 		XYLocation carLoc = _carCoords.get(car);
 		boolean esHorizontal = Character.isLowerCase(car);
 
-		Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(14, accionConCodCoche.toString().length() - 1));
+		Action accionSinCodCoche = new DynamicAction(accionConCodCoche.toString().substring(15, accionConCodCoche.toString().length() - 1));
 		
 		int carIter = 0, j = carLoc.getXCoOrdinate(), i = carLoc.getYCoOrdinate();	
 		
-		if(accionSinCodCoche.equals(palante)) {
+		if(accionSinCodCoche.equals(FORWARD)) {
 			if(esHorizontal) {
 				carIter = j + 1;
 				while(_tablero[i][carIter] == car)
 					carIter++;
 							
 				if(carIter < _tam - 1 && _tablero[i][carIter] == HUECO
-						|| (car == 'z' && _tablero[i][carIter] == META)) 
+						|| (car == COCHE_ROJO && _tablero[i][carIter] == META)) 
 					return true;
 			}
 			else {
@@ -222,11 +219,11 @@ public class EstadoAtasco {
 				
 				
 				if(carIter < _tam - 1 && _tablero[carIter][j] == HUECO
-						|| (car == 'z' && _tablero[i][carIter] == META)) 
+						|| (car == COCHE_ROJO && _tablero[i][carIter] == META)) 
 					return true;
 			}
 		}
-		else if(accionSinCodCoche.equals(patras)){
+		else if(accionSinCodCoche.equals(BACKWARD)){
 			if(esHorizontal) {
 				if(i > 1 && _tablero[i][j-1] == HUECO) 
 					return true;
