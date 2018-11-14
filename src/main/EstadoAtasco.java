@@ -37,9 +37,9 @@ public class EstadoAtasco {
 	private static final int FICH_COD_NIVEL = 1;
 	private static final int FICH_COD_TAM = 3;
 	
-	private static final char PARED = '#';
-	private static final char META = '@';
-	private static final char HUECO = '.';
+	protected static final char PARED = '#';
+	protected static final char META = '@';
+	protected static final char HUECO = '.';
 
 
 	

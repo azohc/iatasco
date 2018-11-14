@@ -11,7 +11,7 @@ public class HeuristicaBloqueoCaminoRecto implements HeuristicFunction{
 		return getCochesEnElCaminoRecto(estado);
 	}
 	
-	private int getCochesEnElCaminoRecto(EstadoAtasco e) {
+	private double getCochesEnElCaminoRecto(EstadoAtasco e) {
 		
 		XYLocation posCocheASacar = e.getCarMap().get('z');
 		
@@ -23,14 +23,14 @@ public class HeuristicaBloqueoCaminoRecto implements HeuristicFunction{
 			carIter++;
 		
 		
-		int numCoches = 0;
+		double numCoches = 0;
 		
 		//asumimos que no habra ningun estado en el que se
 		//encuentre otro coche en frente del coche a sacar del 
 		//atasco, es decir, no habra estado con mas de un
 		//coche en horizontal situads en la fila de la meta
 		for(; carIter < e.getTam(); carIter++) 
-			if(tablero[i][carIter] != '.' && tablero[i][carIter] != '@')
+			if(tablero[i][carIter] != EstadoAtasco.HUECO && tablero[i][carIter] != EstadoAtasco.META)
 				numCoches++;
 		
 		return numCoches;

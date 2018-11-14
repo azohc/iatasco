@@ -90,7 +90,7 @@ public class RetoAtascoDemo {
 					AtascoFunctionFactory.getResultFunction(), 
 					new AtascoGoalTest(), new AtascoStepCostFunction());
 			
-			SearchForActions busqueda = new AStarSearch(new GraphSearch(), new HeuristicaConstante());
+			SearchForActions busqueda = new AStarSearch(new GraphSearch(), new HeuristicaDistanciaMasObstaculos());
 			SearchAgent agent = new SearchAgent(problema, busqueda);
 			
 			printActions(agent.getActions());
@@ -130,7 +130,7 @@ public class RetoAtascoDemo {
 					AtascoFunctionFactory.getResultFunction(), 
 					new AtascoGoalTest(), new AtascoStepCostFunction());
 			
-			SearchForActions busqueda = new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaConstante());
+			SearchForActions busqueda = new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaDistanciaMasObstaculos());
 			SearchAgent agent = new SearchAgent(problema, busqueda);
 			
 			printActions(agent.getActions());
