@@ -3,8 +3,6 @@ package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +52,7 @@ public class EstadoAtasco {
 		Scanner s = new Scanner(System.in);
 		int nivel = s.nextInt();
 		cargarTablero(fichero, nivel);
+		s.close();
 	}
 	
 	public EstadoAtasco(EstadoAtasco e) {

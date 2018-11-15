@@ -11,12 +11,9 @@ import aima.core.search.framework.problem.Problem;
 import aima.core.search.framework.qsearch.GraphSearch;
 import aima.core.search.framework.qsearch.TreeSearch;
 import aima.core.search.informed.AStarSearch;
-import aima.core.search.informed.BestFirstSearch;
 import aima.core.search.informed.GreedyBestFirstSearch;
 import aima.core.search.uninformed.BreadthFirstSearch;
 import aima.core.search.uninformed.DepthFirstSearch;
-import aima.core.search.uninformed.DepthLimitedSearch;
-import aima.core.search.uninformed.IterativeDeepeningSearch;
 import aima.core.search.uninformed.UniformCostSearch;
 
 public class RetoAtascoDemo {
@@ -31,7 +28,6 @@ public class RetoAtascoDemo {
 		System.out.println("Busquedas informadas: Heuristica bloqueo en camino recto");
 		retoAtascoAStarCaminoRectoDemo(); 
 		retoAtascoGBFCaminoRectoDemo();		
-		
 		
 		System.out.println();
 		System.out.println("Busquedas informadas: Heuristica distancia mas obstaculos");
@@ -53,7 +49,7 @@ public class RetoAtascoDemo {
 		retoAtascoDFSGraphDemo();
 		System.out.println();
 		//DFS con TreeSearch
-		//retoAtascoDFSTreeDemo(); //Se pilla en un bucle infinito, acaba saliendo con
+		//retoAtascoDFSTreeDemo(); //Se pilla en un bucle infinito, acaba lanzando
 		//java.lang.OutOfMemoryError: GC overhead limit exceeded
 	}
 	
