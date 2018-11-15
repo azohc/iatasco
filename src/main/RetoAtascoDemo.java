@@ -53,11 +53,8 @@ public class RetoAtascoDemo {
 		retoAtascoDFSGraphDemo();
 		System.out.println();
 		//DFS con TreeSearch
-		retoAtascoDFSTreeDemo(); //Se pilla en un bucle infinito (o mega largo)
-		
-		System.out.println();
-		System.out.println("Busquedas no informadas: Iterative Deepening Search" );
-		retoAtascoIDSDemo();	//Mismo caso que DFS con TreeSearch
+		//retoAtascoDFSTreeDemo(); //Se pilla en un bucle infinito, acaba saliendo con
+		//java.lang.OutOfMemoryError: GC overhead limit exceeded
 	}
 	
 	private static void retoAtascoDFSTreeDemo() 
@@ -99,27 +96,7 @@ public class RetoAtascoDemo {
 			e.printStackTrace();
 		}		
 	}
-	
-	private static void retoAtascoIDSDemo() 
-	{
-		System.out.println("\nRetoAtascoDemo Iterative Deepening Search-->");
-		try{
-			Problem problema = new Problem(_estadoInicial, 
-					AtascoFunctionFactory.getActionsFunction(), 
-					AtascoFunctionFactory.getResultFunction(), 
-					new AtascoGoalTest(), new AtascoStepCostFunction());
-			
-			IterativeDeepeningSearch busqueda = new IterativeDeepeningSearch();
-			SearchAgent agent = new SearchAgent(problema, busqueda);
-			
-			printActions(agent.getActions());
-			printInstrumentation(agent.getInstrumentation());
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}		
-	}
-	
+
 	private static void retoAtascoBreadthFirstSearchDemo() 
 	{
 		System.out.println("\nRetoAtascoDemo Breadth First Search-->");
