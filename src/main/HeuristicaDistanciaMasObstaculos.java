@@ -15,8 +15,7 @@ public class HeuristicaDistanciaMasObstaculos implements HeuristicFunction {
 	}
 	
 	// Cuenta la cantidad de movimientos (sin contemplar obstaculos) hasta la meta +
-	//		  					  el numero de obstaculos entre el coche y la meta +
-	//		 el minimo numero de movimientos para que cada obstaculo deje de serlo +
+	//		 el minimo numero de movimientos para que cada obstaculo deje de serlo 
 	
 	private double getDistanciaMasObstaculos(EstadoAtasco e){
 		double retVal = 0;
@@ -36,8 +35,7 @@ public class HeuristicaDistanciaMasObstaculos implements HeuristicFunction {
 		for(; carIter < e.getTam(); carIter++) 
 			if(tablero[i_rojo][carIter] != EstadoAtasco.HUECO && tablero[i_rojo][carIter] != EstadoAtasco.META) 
 				obstaculos.add(tablero[i_rojo][carIter]);
-		
-		retVal += obstaculos.size();
+	
 		
 		//carIter queda en la primera posicion despues del coche rojo, con lo cual
 		//tamTablero - carIter = movimientos para sacar al coche rojo del atasco (sin contar obstaculos)

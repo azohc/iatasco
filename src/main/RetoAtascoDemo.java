@@ -31,7 +31,8 @@ public class RetoAtascoDemo {
 		
 		System.out.println();
 		System.out.println("Busquedas informadas: Heuristica distancia mas obstaculos");
-		retoAtascoAStarDistanciaMasObstaculosDemo();
+		//retoAtascoAStarTreeDistanciaMasObstaculosDemo();  // acaba lanzando java.lang.OutOfMemoryError: GC overhead limit exceeded
+		retoAtascoAStarGraphDistanciaMasObstaculosDemo();
 		retoAtascoGBFDistanciaMasObstaculosDemo();
 		
 		//NO INFORMADAS
@@ -49,8 +50,7 @@ public class RetoAtascoDemo {
 		retoAtascoDFSGraphDemo();
 		System.out.println();
 		//DFS con TreeSearch
-		//retoAtascoDFSTreeDemo(); //Se pilla en un bucle infinito, acaba lanzando
-		//java.lang.OutOfMemoryError: GC overhead limit exceeded
+		//retoAtascoDFSTreeDemo(); // acaba lanzando java.lang.OutOfMemoryError: GC overhead limit exceeded
 	}
 	
 	private static void retoAtascoDFSTreeDemo() 
@@ -155,9 +155,9 @@ public class RetoAtascoDemo {
 		}		
 	}
 	
-	private static void retoAtascoAStarDistanciaMasObstaculosDemo()
+	private static void retoAtascoAStarGraphDistanciaMasObstaculosDemo()
 	{
-		System.out.println("\nRetoAtascoDemo AStar HeuristicaDistanciaMasObstaculos-->");
+		System.out.println("\nRetoAtascoDemo AStar (GraphSearch) HeuristicaDistanciaMasObstaculos-->");
 		try{
 			Problem problema = new Problem(_estadoInicial, 
 					AtascoFunctionFactory.getActionsFunction(), 
@@ -165,6 +165,26 @@ public class RetoAtascoDemo {
 					new AtascoGoalTest(), new AtascoStepCostFunction());
 			
 			SearchForActions busqueda = new AStarSearch(new GraphSearch(), new HeuristicaDistanciaMasObstaculos());
+			SearchAgent agent = new SearchAgent(problema, busqueda);
+			
+			printActions(agent.getActions());
+			printInstrumentation(agent.getInstrumentation());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}		
+	}
+	
+	private static void retoAtascoAStarTreeDistanciaMasObstaculosDemo()
+	{
+		System.out.println("\nRetoAtascoDemo AStar (TreeSearch) HeuristicaDistanciaMasObstaculos-->");
+		try{
+			Problem problema = new Problem(_estadoInicial, 
+					AtascoFunctionFactory.getActionsFunction(), 
+					AtascoFunctionFactory.getResultFunction(), 
+					new AtascoGoalTest(), new AtascoStepCostFunction());
+			
+			SearchForActions busqueda = new AStarSearch(new TreeSearch(), new HeuristicaDistanciaMasObstaculos());
 			SearchAgent agent = new SearchAgent(problema, busqueda);
 			
 			printActions(agent.getActions());
